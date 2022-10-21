@@ -1,1 +1,4 @@
 /.idea/
+/data/vendor/
+/logs/nginx/
+/logs/php.log/
