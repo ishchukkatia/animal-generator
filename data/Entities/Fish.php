@@ -9,4 +9,5 @@ class Fish extends  Animal
     const COLOR_VALUES = ['blue', 'gray', 'gold', 'green'];
     const TYPE_VALUES = ['istuvna', 'vecoratuvna'];
     const SIZE_VALUES = ['middle', 'small'];
+    protected const NAME = 'fish';
 }

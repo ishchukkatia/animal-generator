@@ -9,5 +9,5 @@ class Dog extends  Animal
     const COLOR_VALUES = ['black', 'red', 'gray', 'brown', 'white'];
     const TYPE_VALUES = ['dvornaga', 'porodustuy'];
     const SIZE_VALUES = ['middle', 'big'];
-
+    protected const NAME = 'dog';
 }

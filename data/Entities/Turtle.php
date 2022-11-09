@@ -9,4 +9,5 @@ class Turtle extends  Animal
     const COLOR_VALUES = ['gray', 'green'];
     const TYPE_VALUES = ['vodni', 'syxopytni'];
     const SIZE_VALUES = ['big', 'middle', 'small'];
+    protected const NAME = 'turtle';
 }

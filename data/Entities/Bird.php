@@ -9,4 +9,5 @@ class Bird extends  Animal
     const COLOR_VALUES = ['black',  'gray', 'brown', 'white'];
     const TYPE_VALUES = [ 'zumovuy', 'litniy'];
     const SIZE_VALUES = 'small';
+    protected const NAME = 'bird';
 }

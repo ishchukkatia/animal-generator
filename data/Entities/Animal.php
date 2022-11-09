@@ -4,19 +4,31 @@ namespace App\Entities;
 
 use http\Exception;
 
-abstract class Animal
+class Animal
 {
     protected const PLACE_VALUES = ['sky', 'mountain', 'sea', 'earth', 'river', 'house', 'tree'];
     protected const SEX_VALUES = ['man', 'woman'];
     protected const COLOR_VALUES = ['black', 'red', 'blue', 'gray', 'gold', 'brown', 'green', 'white'];
     protected const TYPE_VALUES = ['vodni', 'syxopytni', 'dvornaga', 'porodustuy', 'zumovuy', 'litniy', 'istuvna', 'vecoratuvna'];
     protected const SIZE_VALUES = ['big', 'middle', 'small'];
+    protected const NAME = 'animal';
 
     protected string $sex;
     protected string $size;
     protected string $type;
     protected string $color;
     protected string $place;
+    protected string $name;
+
+    public function __construct(string $size, string $color, string $place, string $sex, string $type)
+    {
+        $this->setPlace($place);
+        $this->setColor($color);
+        $this->setSex($sex);
+        $this->setSize($size);
+        $this->setType($type);
+        $this->setName(static::NAME);
+    }
 
     /**
      * @return string
@@ -126,13 +138,36 @@ abstract class Animal
         $this->color = $color;
     }
 
-    public function __construct(string $size, string $color, string $place, string $sex, string $type)
+
+    /**
+     * @return string
+     */
+    public function getName(): string
     {
-        $this->setPlace($place);
-        $this->setColor($color);
-        $this->setSex($sex);
-        $this->setSize($size);
-        $this->setType($type);
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function getBodyImage()
+    {
+        return 'Src/Images/Assets/' . ucfirst($this->name) . '/body.png';
+    }
+
+    public function getHeadImage()
+    {
+        return 'Src/Images/Assets/' . ucfirst($this->name) . '/head.png';
+    }
+
+    public function getBabyImage()
+    {
+        return 'Src/Images/GeneratedAnimals/' . $this->name . '.png';
     }
 }
 

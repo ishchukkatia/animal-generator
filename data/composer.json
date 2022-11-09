@@ -5,7 +5,9 @@
   "keywords": ["kate", "study"],
   "license": "MIT",
   "require": {
-    "php": "8.*"
+    "php": "8.*",
+    "symfony/var-dumper": "^6.1",
+    "spatie/image": "^2.2"
   },
   "autoload": {
     "psr-4": {

@@ -2,25 +2,29 @@
 
 namespace App\Controllers;
 
+use App\Configs\AnimalConfig;
 use App\Entities\Animal;
-use App\Entities\Cat;
-use App\Entities\Dog;
+use App\Services\ImageGenerator;
 
 class AnimalGeneratorController
 {
-    public function index()
+    public function generate(array $firstParentData, array $secondParentData)
     {
-        try {
-            $cat = new Cat('middle', 'black', 'house', 'man', 'porodustuy');
-            $dog = new Dog('middle', 'brown', 'house', 'woman', 'porodustuy');
-        } catch (\Exception $e) {
-            die($e->getMessage());
-        }
+        $firstParentClass = AnimalConfig::ANIMAL_NAMESPACES[$firstParentData['animal']];
+        $secondParentClass = AnimalConfig::ANIMAL_NAMESPACES[$secondParentData['animal']];
+        $firstParent = new $firstParentClass($firstParentData['size'], $firstParentData['color'], $firstParentData['place'], $firstParentData['sex'], $firstParentData['type']);
+        $secondParent = new $secondParentClass($secondParentData['size'], $secondParentData['color'], $secondParentData['place'], $secondParentData['sex'], $secondParentData['type']);
 
-        $this->generateAnimal($cat, $dog);
+        return $this->generateAnimal( $firstParent , $secondParent);
     }
 
-    private function generateAnimal(Animal $firstParent, Animal $secondParent)
+    /**
+     * @param Animal $firstParent
+     * @param Animal $secondParent
+     * @return Animal
+     * @throws \Exception
+     */
+    private function generateAnimal(Animal $firstParent, Animal $secondParent): Animal
     {
         if ($firstParent->getSex() === $secondParent->getSex()) {
             throw new \Exception('parents have similar sex');
@@ -31,14 +35,61 @@ class AnimalGeneratorController
         if ($firstParent->getSize() !== $secondParent->getSize()) {
             throw new \Exception('parents have different size');
         }
-        $this->generateName($firstParent, $secondParent);
+        $name = $this->generateName($firstParent, $secondParent);
+        $size = $this->generateSize($firstParent, $secondParent);
+        $place = $this->generatePlace($firstParent, $secondParent);
+        $color = $this->generateColor($firstParent, $secondParent);
+        $type = $this->generateType($firstParent, $secondParent);
+        $sex = $this->generateSex($firstParent, $secondParent);
+        $child = new Animal($size, $color, $place, $sex, $type);
+        $child->setName($name);
+
+        if(!ImageGenerator::isImageExist($child->getBabyImage())){
+            ImageGenerator::generateImage($secondParent->getHeadImage(), $firstParent->getBodyImage(), $child->getBabyImage());
+        }
+
+        return $child;
     }
 
-    private function generateName(Animal $object1, Animal $object2)
+    private function generateName(Animal $firstParent, Animal $secondParent)
     {
-        $reflectionFirstObject = new \ReflectionClass($object1);
-        $reflectionSecondObject = new \ReflectionClass($object2);
-
-        return substr($reflectionFirstObject->getShortName(), 0, 2) . substr($reflectionSecondObject->getShortName(), -2, 2);
+        return substr($firstParent->getName(), 0, 2) . substr($secondParent->getName(), -2, 2);
     }
+
+    private function generateSize(Animal $firstParent, Animal $secondParent)
+    {
+        $size = [$firstParent->getSize(), $secondParent->getSize()];
+        shuffle($size);
+        return $size[0];
+    }
+
+    private function generatePlace(Animal $firstParent, Animal $secondParent)
+    {
+        $place = [$firstParent->getPlace(), $secondParent->getPlace()];
+        shuffle($place);
+        return $place[0];
+    }
+
+    private function generateType(Animal $firstParent, Animal $secondParent)
+    {
+        $type = [$firstParent->getType(), $secondParent->getType()];
+        shuffle($type);
+        return $type[0];
+    }
+
+    private function generateColor(Animal $firstParent, Animal $secondParent)
+    {
+        $color = [$firstParent->getColor(), $secondParent->getColor()];
+        shuffle($color);
+        return $color[0];
+    }
+
+    private function generateSex(Animal $firstParent, Animal $secondParent)
+    {
+        $sex = [$firstParent->getSex(), $secondParent->getSex()];
+        shuffle($sex);
+        return $sex[0];
+    }
+
+
 }

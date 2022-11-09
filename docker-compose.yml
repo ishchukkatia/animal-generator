@@ -12,7 +12,10 @@ services:
             - ./data/:/var/www/html/
             - ./logs/nginx:/var/log/nginx/
     php:
-        image: php:fpm-alpine
+        container_name: animal-generator-php
+        build:
+            context: .
+            dockerfile: dockerfiles/php/Dockerfile
         networks:
             - internal
         volumes:
