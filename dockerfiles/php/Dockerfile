@@ -19,4 +19,5 @@ RUN docker-php-ext-install mbstring \
     && docker-php-ext-install zip \
     && docker-php-ext-install exif \
     && docker-php-ext-enable exif \
+    && docker-php-ext-install mysqli pdo pdo_mysql \
     && docker-php-ext-enable gd \

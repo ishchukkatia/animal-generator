@@ -17,7 +17,7 @@ class ImageGenerator
         Image::load($bodyPath)
             ->watermark($headPath)
             ->watermarkPosition(Manipulations::POSITION_BOTTOM_LEFT)
-            ->watermarkPadding(5, 25, Manipulations::UNIT_PERCENT)
+            ->watermarkPadding(5, 35, Manipulations::UNIT_PERCENT)
             ->save($babyImagePath);
     }
 }

@@ -30,6 +30,17 @@ services:
             - php
         networks:
             - internal
+    mysql_animal_generator:
+        image: mysql:8.0
+        command: --default-authentication-plugin=mysql_native_password
+        container_name: mysql_animal_generator
+        hostname: mysql
+        volumes:
+            - ./mysql:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+        networks:
+            - internal
 networks:
     internal:
         driver: bridge

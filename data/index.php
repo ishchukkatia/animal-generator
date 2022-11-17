@@ -4,12 +4,17 @@ require 'vendor/autoload.php';
 
 $controller = new \App\Controllers\AnimalGeneratorController();
 $validator = new \App\Services\AnimalValidator();
+$animalModel = new \App\Models\AnimalModel();
+
 try {
+    $animalModel->getAnimals();
+    $animals = $animalModel->getAnimals();
 
     if (isset($_GET['generate']) && $_GET['generate'] === 'true') {
         $validator->validate($_GET['first_parent']);
         $validator->validate($_GET['second_parent']);
         $baby = $controller->generate($_GET['first_parent'], $_GET['second_parent']);
+        $animalModel->saveAnimal($baby);
     }
 } catch (\Exception $e) {
     $error = $e->getMessage();
@@ -36,21 +41,21 @@ try {
             height: auto;
 
         }
+
         body {
-            background-image: url("https://img.freepik.com/premium-vector/cute-baby-seamless-pattern-with-pacifiers_528213-1013.jpg?w=2000");
+
             color: steelblue;
+        }
+
+        .dop-fon {
+            background-color: lightblue;
 
         }
-        .dop-block{
-            background-color: lightblue;
-            border-style: revert;
-            border-radius: 40px;
-        }
-        .dop-fon{
-            background-color: lightblue;
-            
-        }
+
         .button {
+            float: left;
+            margin: 30px;
+            margin-left: 205px;
             display: inline-block;
             padding: 15px 25px;
             font-size: 24px;
@@ -65,13 +70,16 @@ try {
             box-shadow: 0 9px #999;
         }
 
-        .button:hover {background-color: #4CAF50}
+        .button:hover {
+            background-color: #4CAF50
+        }
 
         .button:active {
             background-color: #106ee8;
             box-shadow: 0 5px #666;
             transform: translateY(4px);
         }
+
         .error {
             width: 100px;
             height: 100px;
@@ -84,64 +92,45 @@ try {
             animation-duration: 8s;
         }
 
-        @keyframes example {
-            0% {
-                background-color: red;
-                left: 0px;
-                top: 1000px;
-            }
-            25% {
-                background-color: yellow;
-                left: 800px;
-                top: 0px;
-            }
-            50% {
-                background-color: blue;
-                left: 200px;
-                top: 200px;
-            }
-            75% {
-                background-color: green;
-                left: 0px;
-                top: 200px;
-            }
-            100% {
-                background-color: red;
-                left: 0px;
-                top: 0px;
-            }
+
         }
+
         .h1 {
-                color: white;
-                text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
-            }
+            color: white;
+            text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+        }
+
         .h2 {
             color: steelblue;
             font-size: 25px;
-            text-shadow: 1px 1px , 0 0 1px blue, 0 0 ;
+            text-shadow: 1px 1px, 0 0 1px blue, 0 0;
         }
-        .h3{
+
+        .h3 {
             color: #106ee8;
             font-size: 40px;
             margin-left: auto;
             text-shadow: 1px 1px 2px black, 0 0 100px blue, 0 0 10px whitesmoke;
         }
-        select{
+
+        select {
             text-align: center;
             color: blue;
             font-size: 16px;
             cursor: pointer;
         }
+
         .baby-text {
             color: steelblue;
             font-size: 25px;
-            text-shadow: 1px 1px , 0 0 1px blue, 0 0 ;
+            text-shadow: 1px 1px, 0 0 1px blue, 0 0;
+
         .baby-name {
             color: steelblue;
             font-size: 40px;
             font-weight: bolder;
             text-decoration-style: solid;
-            text-shadow: 1px 1px , 0 0 1px blue, 0 0 ;
+            text-shadow: 1px 1px, 0 0 1px blue, 0 0;
 
     </style>
 
@@ -361,8 +350,7 @@ try {
                     </fieldset>
                 </div>
             </div>
-            <br>
-            <div class="container mt-10">
+            <div class=" col-6 px-5">
                 <?php
                 if (empty($_GET['first_parent']['animal']) || empty($_GET['second_parent']['animal'])) {
                     echo '<button type="submit" class="btn btn-primary btn-lg button" style="width:700px;" name="continue" value="true">Continue</button>';
@@ -371,41 +359,45 @@ try {
                 } ?>
             </div>
         </form>
-        <br>
         <?php if (isset($error)) {
             echo "<div class='container '  ><span class='badge  fs-4 error' style='width:700px; height: 60px' >{$error}</span> </div> ";
         }
 
         ?>
     </div>
+    <div class="col-4  text-center mt-2 dop-block">
 
-    <div class="col-4 text-center mt-2">
-    </div>
-    <div class="col-4 text-center mt-2 dop-block">
-
-        <!--        --><?php //if (\App\Entities\Animal::) {
-        //            echo "<div class='container'  ><span class='badge bg-danger fs-3' style='width:700px; height: 60px' >{}</span> </div> ";
-        //        }
-        //
-        //        ?>
-
-      <?php  if(isset($baby)) {
-          echo '<div class="row g-0  flex-md-row mb-4  position-relative">
+        <?php if (isset($baby)) {
+            echo '<div class="row g-0  flex-md-row">
             <div class="col p-4 d-flex flex-column position-static">
                 <strong class="d-inline-block mb-2 text-success"><h1 class="h3">Baby</h1></strong>
                 
-                <h1 class="baby-name" >'.ucfirst($baby->getName())  . '</h1>
+                <h1 class="baby-name" >' . ucfirst($baby->getName()) . '</h1>
 
-               <br> <p class="mb-auto baby-text">'. $baby->getSex() . ' <br> '. $baby->getType() .'<br> '. $baby->getColor() . ' <br> '. $baby->getSize() .' <br> '. $baby->getPlace() .'</p>
+               <br> <p class="mb-auto baby-text">' . $baby->getSex() . ' <br> ' . $baby->getType() . '<br> ' . $baby->getColor() . ' <br> ' . $baby->getSize() . ' <br> ' . $baby->getPlace() . '</p>
                 
             </div>
             <div class="col-auto d-none d-lg-block">
-                <img src=" '. $baby->getBabyImage() .' " class=" " >
+                <img src=" ' . $baby->getBabyImage() . ' " class=" " >
 
             </div>
         </div>';
-      }
-       ?>
+        }
+        ?>
+
+    </div>
+    <div class="col-6  text-center mt-2 ">
+
+        <h1 class="baby-name">Last 10 animals</h1>
+        <?php
+        foreach ($animals as $animal) {
+            echo "<div class='row g-0  flex-md-row '>
+                <div class='col-12 p-4 d-flex flex-column position-static'>
+                    <strong class='d-inline-block mb-2 text-success'>{$animal['name']}, {$animal['sex']},{$animal['size']},{$animal['type']}, {$animal['color']}, {$animal['place']}, </strong>
+                    <img src='{$animal['image_path']}'>
+                </div>";
+        }
+        ?>
 
     </div>
 </div>
