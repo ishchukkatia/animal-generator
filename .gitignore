@@ -2,3 +2,5 @@
 /data/vendor/
 /logs/nginx/
 /logs/php.log/
+/mysql/
+/data/Src/Images/GeneratedAnimals/
